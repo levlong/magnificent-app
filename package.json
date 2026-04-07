@@ -1,6 +1,6 @@
 {
     "scripts": {
         "dev:be": "pnpm --filter be dev",
-        "dev:app": "pnpm --filter app start"
+        "dev:a": "pnpm --filter a start"
     }
 }
