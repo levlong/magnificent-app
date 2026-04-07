@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react"
 import { View, Text, FlatList } from "react-native"
 import { getWords } from "../api/vocab.api"
+import { colors } from "../constants/colors"
+import { Layout } from "../components/layout/Layout"
 
-export default function HomeScreen() {
+export const HomeScreen = () => {
     const [words, setWords] = useState<any[]>([])
 
     useEffect(() => {
@@ -19,25 +21,51 @@ export default function HomeScreen() {
     }
 
     return (
-        <View style={{ padding: 20 }}>
-            <Text style={{ fontSize: 24, marginBottom: 10 }}>
-                Vocab List
-            </Text>
+        <Layout>
+            {/* CONTENT (list vocab tạm) */}
+            <View
+                style={{
+                    flex: 1,
+                    marginVertical: 16,
+                    backgroundColor: colors.card,
+                    borderRadius: 20,
+                    padding: 12
+                }}
+            >
+                <FlatList
+                    data={words}
+                    keyExtractor={(item) => item.id.toString()}
+                    showsVerticalScrollIndicator={false}
+                    renderItem={({ item }) => (
+                        <View
+                            style={{
+                                padding: 12,
+                                borderBottomWidth: 1,
+                                borderColor: colors.border,
+                            }}
+                        >
+                            <Text
+                                style={{
+                                    color: colors.text,
+                                    fontSize: 16,
+                                    fontWeight: "600",
+                                }}
+                            >
+                                {item.text}
+                            </Text>
 
-            <FlatList
-                data={words}
-                keyExtractor={(item) => item.id.toString()}
-                renderItem={({ item }) => (
-                    <View style={{ marginBottom: 12 }}>
-                        <Text style={{ fontSize: 18 }}>
-                            {item.text}
-                        </Text>
-                        <Text>
-                            {item.meanings?.[0]?.definition || "No definition"}
-                        </Text>
-                    </View>
-                )}
-            />
-        </View>
+                            <Text
+                                style={{
+                                    color: colors.subtext,
+                                    marginTop: 4,
+                                }}
+                            >
+                                {item.meanings?.[0]?.definition || "No definition"}
+                            </Text>
+                        </View>
+                    )}
+                />
+            </View>
+        </Layout>
     )
 }

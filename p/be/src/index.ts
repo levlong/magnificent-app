@@ -8,7 +8,7 @@ async function main() {
     try {
         console.log("🚀 Start pipeline...")
 
-        const paragraphs = await crawlWiki("mammal")
+        const paragraphs = await crawlWiki("love")
         console.log(`✅ Crawled ${paragraphs.length} paragraphs`)
 
         const text = paragraphs.join(" ")

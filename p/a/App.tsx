@@ -1,6 +1,11 @@
-import HomeScreen from "./src/screens/HomeScreen";
+import { NavigationContainer } from "@react-navigation/native"
+import "react-native-gesture-handler"
+import { Navigator } from "./src/components/layout/Navigator"
 
-export default function App() {
-    console.log('Ok')
-    return <HomeScreen />
+export const App = () => {
+    return (
+        <NavigationContainer>
+            <Navigator />
+        </NavigationContainer>
+    )
 }
