@@ -6,10 +6,19 @@ import "dotenv/config"
 const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL })
 const prisma = new PrismaClient({ adapter })
 
-export async function saveWords(freq: Record<string, number>) {
+type SaveWordsOptions = {
+    examplesByWord?: Record<string, string[]>
+    exampleSource?: string
+}
+
+export async function saveWords(
+    freq: Record<string, number>,
+    options: SaveWordsOptions = {},
+) {
     const result = {
         created: 0,
         skipped: 0,
+        examplesCreated: 0,
         failed: 0,
     }
 
@@ -21,6 +30,11 @@ export async function saveWords(freq: Record<string, number>) {
 
             if (existing) {
                 result.skipped++
+                result.examplesCreated += await saveExamples(
+                    existing.id,
+                    options.examplesByWord?.[word] ?? [],
+                    options.exampleSource ?? "unknown",
+                )
                 continue
             }
 
@@ -53,6 +67,11 @@ export async function saveWords(freq: Record<string, number>) {
                 })
             }
 
+            result.examplesCreated += await saveExamples(
+                newWord.id,
+                options.examplesByWord?.[word] ?? [],
+                options.exampleSource ?? "unknown",
+            )
             result.created++
         } catch (err) {
             console.error(err)
@@ -62,6 +81,34 @@ export async function saveWords(freq: Record<string, number>) {
     }
 
     return result
+}
+
+async function saveExamples(wordId: number, sentences: string[], source: string) {
+    let created = 0
+
+    for (const sentence of sentences.slice(0, 3)) {
+        const existing = await prisma.example.findFirst({
+            where: {
+                wordId,
+                sentence,
+                source,
+            },
+        })
+
+        if (existing) continue
+
+        await prisma.example.create({
+            data: {
+                wordId,
+                sentence,
+                source,
+            },
+        })
+
+        created++
+    }
+
+    return created
 }
 
 export async function getAllWords(page: number, limit: number) {
