@@ -7,13 +7,22 @@ const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL })
 const prisma = new PrismaClient({ adapter })
 
 export async function saveWords(freq: Record<string, number>) {
+    const result = {
+        created: 0,
+        skipped: 0,
+        failed: 0,
+    }
+
     for (const [word, count] of Object.entries(freq)) {
         try {
             const existing = await prisma.word.findUnique({
                 where: { text: word },
             })
 
-            if (existing) continue
+            if (existing) {
+                result.skipped++
+                continue
+            }
 
             const data = await getWordData(word)
 
@@ -34,11 +43,25 @@ export async function saveWords(freq: Record<string, number>) {
                 })
             }
 
+            if (data?.example) {
+                await prisma.example.create({
+                    data: {
+                        wordId: newWord.id,
+                        sentence: data.example,
+                        source: "dictionaryapi.dev",
+                    },
+                })
+            }
+
+            result.created++
         } catch (err) {
             console.error(err)
             console.log("skip word:", word)
+            result.failed++
         }
     }
+
+    return result
 }
 
 export async function getAllWords(page: number, limit: number) {

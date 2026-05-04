@@ -4,6 +4,7 @@ import { lemmatize } from "./processor/lemmatizer"
 import { countFrequency } from "./processor/frequency"
 import { saveWords } from "./modules/vocab/vocab.service"
 
+/*
 async function main() {
     try {
         console.log("🚀 Start pipeline...")
@@ -33,5 +34,27 @@ async function main() {
         console.error("❌ Pipeline failed:", err)
     }
 }
+*/
 
-main()
+// import { getTranscript } from "./crawler/ted.crawler"
+
+// async function main() {
+//     const slug = "sir_ken_robinson_do_schools_kill_creativity";
+
+//     const text = await getTranscript(slug);
+
+//     console.log(text);
+// }
+
+// main();
+
+import axios from "axios";
+
+async function test() {
+    const url = "https://www.ted.com";
+
+    const res = await axios.get(url);
+    console.log(res.status);
+}
+
+test();

@@ -1,7 +1,8 @@
 import axios from "axios"
 
 export async function crawlWiki(title: string): Promise<string[]> {
-    const url = `https://simple.wikipedia.org/api/rest_v1/page/summary/${title}`
+    const normalizedTitle = title.trim().replace(/\s+/g, "_")
+    const url = `https://simple.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(normalizedTitle)}`
 
     const { data } = await axios.get(url, {
         headers: {
