@@ -1,3 +1,5 @@
+import { normalizeTranscriptLine } from "../processor/transcript-normalizer"
+
 export function parseSRT(content: string): string[] {
     return content
         .split("\n")
@@ -9,4 +11,6 @@ export function parseSRT(content: string): string[] {
                 !line.includes("-->")    // remove timestamp
             )
         })
+        .map(normalizeTranscriptLine)
+        .filter(line => line.length > 0)
 }

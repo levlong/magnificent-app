@@ -16,6 +16,7 @@ export type TopicCrawlResult = {
     saved: {
         created: number
         skipped: number
+        examplesCreated: number
         failed: number
     }
 }

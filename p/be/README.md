@@ -1,3 +1,11 @@
+# Language Learning App Backend
+
+Current backend docs are in [docs/backend.md](docs/backend.md).
+
+The notes below are the original development plan and may include planned APIs that are not implemented yet.
+
+---
+
 # 🚀 Language Learning App – Development Plan
 
 ## 🎯 Goal
